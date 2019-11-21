@@ -1,4 +1,3 @@
-
 #[derive(Debug, Copy, Clone)]
 pub enum SkillLevel {
     Normal,
@@ -18,7 +17,7 @@ impl From<SkillLevel> for i32 {
 
 #[derive(Default, Debug)]
 pub struct MatchHistoryOptions {
-    pub hero_id: Option<i32>, 
+    pub hero_id: Option<i32>,
     pub skill: Option<SkillLevel>,
     /// Minimum date in UNIX time.
     pub date_min: Option<u64>,
@@ -31,12 +30,64 @@ pub struct MatchHistoryOptions {
     pub matches_requested: Option<i32>,
 }
 
+#[derive(Default, Debug)]
+pub struct MatchHistoryBySeqNumOptions {
+    pub start_at_match_seq_num: Option<u64>,
+    pub matches_requested: Option<u32>,
+}
+
 #[derive(Deserialize, Debug)]
 pub struct MatchHistoryPlayer {
     /// This is ```None``` if the player is a bot.
     pub account_id: Option<i64>,
     pub player_slot: i32,
     pub hero_id: i32,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct MatchHistoryBySeqNumPlayer {
+    pub account_id: Option<u32>,
+    pub player_slot: i64,
+    pub hero_id: i64,
+    #[serde(rename = "item_0")]
+    pub item0: i64,
+    #[serde(rename = "item_1")]
+    pub item1: i64,
+    #[serde(rename = "item_2")]
+    pub item2: i64,
+    #[serde(rename = "item_3")]
+    pub item3: i64,
+    #[serde(rename = "item_4")]
+    pub item4: i64,
+    #[serde(rename = "item_5")]
+    pub item5: i64,
+    #[serde(rename = "backpack_0")]
+    pub backpack0: i64,
+    #[serde(rename = "backpack_1")]
+    pub backpack1: i64,
+    #[serde(rename = "backpack_2")]
+    pub backpack2: i64,
+    pub kills: i64,
+    pub deaths: i64,
+    pub assists: i64,
+    pub leaver_status: Option<i64>,
+    pub last_hits: i64,
+    pub denies: i64,
+    pub gold_per_min: i64,
+    pub xp_per_min: i64,
+    pub level: i64,
+    pub hero_damage: i64,
+    pub tower_damage: i64,
+    pub hero_healing: i64,
+    pub gold: i64,
+    pub gold_spent: i64,
+    pub scaled_hero_damage: i64,
+    pub scaled_tower_damage: i64,
+    pub scaled_hero_healing: i64,
+    #[serde(default)]
+    pub ability_upgrades: Vec<AbilityUpgrade>,
+    #[serde(default)]
+    pub additional_units: Vec<AdditionalUnit>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -51,6 +102,35 @@ pub struct Match {
 }
 
 #[derive(Deserialize, Debug)]
+pub struct MatchBySeqNum {
+    pub players: Vec<MatchHistoryBySeqNumPlayer>,
+    pub radiant_win: bool,
+    pub duration: i64,
+    pub pre_game_duration: i64,
+    pub start_time: i64,
+    pub match_id: i64,
+    pub match_seq_num: i64,
+    pub tower_status_radiant: i64,
+    pub tower_status_dire: i64,
+    pub barracks_status_radiant: i64,
+    pub barracks_status_dire: i64,
+    pub cluster: i64,
+    pub first_blood_time: i64,
+    pub lobby_type: i64,
+    pub human_players: i64,
+    pub leagueid: i64,
+    pub positive_votes: i64,
+    pub negative_votes: i64,
+    pub game_mode: i64,
+    pub flags: i64,
+    pub engine: i64,
+    pub radiant_score: i64,
+    pub dire_score: i64,
+    #[serde(default)]
+    pub picks_bans: Vec<PicksBan>,
+}
+
+#[derive(Deserialize, Debug)]
 pub struct MatchHistory {
     pub status: i32,
     pub num_results: i32,
@@ -60,8 +140,19 @@ pub struct MatchHistory {
 }
 
 #[derive(Deserialize, Debug)]
+pub struct MatchHistoryBySeqNum {
+    pub status: i32,
+    pub matches: Vec<MatchBySeqNum>,
+}
+
+#[derive(Deserialize, Debug)]
 pub struct MatchHistoryResult {
     pub result: MatchHistory,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct MatchHistoryBySeqNumResult {
+    pub result: MatchHistoryBySeqNum,
 }
 
 #[derive(Deserialize, Debug)]
@@ -96,6 +187,37 @@ pub struct AbilityUpgrade {
     pub ability: i32,
     pub time: i32,
     pub level: i32,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct AdditionalUnit {
+    pub unitname: String,
+    #[serde(rename = "item_0")]
+    pub item0: i64,
+    #[serde(rename = "item_1")]
+    pub item1: i64,
+    #[serde(rename = "item_2")]
+    pub item2: i64,
+    #[serde(rename = "item_3")]
+    pub item3: i64,
+    #[serde(rename = "item_4")]
+    pub item4: i64,
+    #[serde(rename = "item_5")]
+    pub item5: i64,
+    #[serde(rename = "backpack_0")]
+    pub backpack0: i64,
+    #[serde(rename = "backpack_1")]
+    pub backpack1: i64,
+    #[serde(rename = "backpack_2")]
+    pub backpack2: i64,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct PicksBan {
+    pub is_pick: bool,
+    pub hero_id: i64,
+    pub team: i64,
+    pub order: i64,
 }
 
 #[derive(Deserialize, Debug)]
